@@ -10,24 +10,24 @@ public class BranchAccountService  {
 	private final int regNumber;
 	private final AccountData accountData;
 
-	public BranchAccountService(int regNumber, AccountData accountData) throws RemoteException {
+	public BranchAccountService(int regNumber, AccountData accountData) {
 		this.regNumber = regNumber;
 		this.accountData = accountData;
 	}
 
-	public Account createAccount(Customer customer, String currency) throws RemoteException {
+	public Account createAccount(Customer customer, String currency) {
 		return accountData.create(regNumber, customer, currency);
 	}
 
-	public Account getAccount(AccountNumber accountNumber) throws RemoteException {
+	public Account getAccount(AccountNumber accountNumber) {
 		return accountData.read(accountNumber);
 	}
 	
-	public void cancelAccount(Account account) throws RemoteException {
+	public void cancelAccount(Account account) {
 		accountData.delete(account);
 	}
 
-	public Collection<Account> getAccountsFor(Customer customer) throws RemoteException {
+	public Collection<Account> getAccountsFor(Customer customer) {
 		return accountData.readAccountsFor(customer);
 	}
 }

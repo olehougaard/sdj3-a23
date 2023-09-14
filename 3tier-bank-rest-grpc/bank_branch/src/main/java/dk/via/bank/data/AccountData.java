@@ -9,9 +9,9 @@ import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Customer;
 
 public interface AccountData extends Remote {
-	public Account create(int regNumber, Customer customer, String currency) throws RemoteException;
-	public Account read(AccountNumber accountNumber) throws RemoteException;
-	public Collection<Account> readAccountsFor(Customer customer) throws RemoteException;
-	public void update(Account account) throws RemoteException;
-	public void delete(Account account) throws RemoteException;
+	public Account create(int regNumber, Customer customer, String currency);
+	public Account read(AccountNumber accountNumber);
+	public Collection<Account> readAccountsFor(Customer customer);
+	public void update(Account account);
+	public void delete(Account account);
 }

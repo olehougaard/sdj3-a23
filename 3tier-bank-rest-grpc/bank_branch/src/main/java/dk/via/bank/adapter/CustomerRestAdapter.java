@@ -18,43 +18,23 @@ public class CustomerRestAdapter implements CustomerData {
     }
 
     @Override
-    public Customer create(String cpr, String name, String address) throws RemoteException {
-        try {
-            Customer customer = new Customer(cpr, name, address);
-            return restTemplate.postForObject(endpoint, customer, Customer.class);
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public Customer create(String cpr, String name, String address) {
+        Customer customer = new Customer(cpr, name, address);
+        return restTemplate.postForObject(endpoint, customer, Customer.class);
     }
 
     @Override
-    public Customer read(String cpr) throws RemoteException {
-        try {
-            return restTemplate.getForEntity(endpoint + "/" + cpr, Customer.class).getBody();
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public Customer read(String cpr) {
+        return restTemplate.getForEntity(endpoint + "/" + cpr, Customer.class).getBody();
     }
 
     @Override
-    public void update(Customer customer) throws RemoteException {
-        try {
-            restTemplate.put(endpoint + "/" + customer.getCpr(), customer);
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public void update(Customer customer) {
+        restTemplate.put(endpoint + "/" + customer.getCpr(), customer);
     }
 
     @Override
-    public void delete(Customer customer) throws RemoteException {
-        try {
-            restTemplate.delete(endpoint + "/" + customer.getCpr());
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public void delete(Customer customer) {
+        restTemplate.delete(endpoint + "/" + customer.getCpr());
     }
 }

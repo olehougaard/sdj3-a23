@@ -1,18 +1,19 @@
 package dk.via.bank;
 
-import java.net.URI;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-
 import dk.via.bank.adapter.AccountRestAdapter;
 import dk.via.bank.adapter.CustomerRestAdapter;
 import dk.via.bank.adapter.ExchangeRateRestAdapter;
 import dk.via.bank.adapter.TransactionRestAdapter;
-import dk.via.bank.data.*;
+import dk.via.bank.data.AccountData;
+import dk.via.bank.data.CustomerData;
+import dk.via.bank.data.ExchangeRateData;
+import dk.via.bank.data.TransactionData;
 import dk.via.bank.service.BranchAccountService;
 import dk.via.bank.service.BranchCustomerService;
 import dk.via.bank.service.BranchExchangeService;
 import dk.via.bank.service.BranchTransactionService;
+import io.grpc.Server;
+import io.grpc.ServerBuilder;
 
 public class RunBranch {
 	public static final int REG_NUMBER = 4711;
@@ -30,10 +31,12 @@ public class RunBranch {
 		BranchTransactionService transactionService = new BranchTransactionService(accountData, transactionData, exchangeData);
 		BranchExchangeService exchangeService = new BranchExchangeService(exchangeData);
 
-		BranchFacade branch = new BranchFacade(customerService, accountService, transactionService, exchangeService);
-
-		Registry branchRegistry = LocateRegistry.createRegistry(8099);
-		branchRegistry.rebind("Branch 1", branch);
-		System.out.println("Branch started");
+		BranchServiceImpl branchService = new BranchServiceImpl(customerService, accountService, transactionService, exchangeService);
+		Server server = ServerBuilder
+				.forPort(9090)
+				.addService(branchService)
+				.build();
+		server.start();
+		server.awaitTermination();
 	}
 }

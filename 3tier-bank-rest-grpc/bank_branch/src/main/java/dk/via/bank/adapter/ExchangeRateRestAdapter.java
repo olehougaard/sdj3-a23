@@ -17,30 +17,23 @@ import java.util.Objects;
 
 public class ExchangeRateRestAdapter implements ExchangeRateData {
     private final String endpoint;
-    private final RestTemplate restTemplate;
 
     public ExchangeRateRestAdapter(String endpoint) {
         this.endpoint = endpoint + "exchange_rate";
-        this.restTemplate = new RestTemplate();
     }
 
     @Override
-    public ExchangeRate getExchangeRate(String fromCurrency, String toCurrency) throws RemoteException {
-        try {
-            UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpoint);
-            builder.queryParam("fromCurrency", fromCurrency);
-            builder.queryParam("toCurrency", toCurrency);
-            Traverson traverson = new Traverson(builder.build(0), MediaTypes.HAL_JSON);
-            CollectionModel<ExchangeRate> exchangeRates = traverson.follow()
-                    .toObject(new TypeReferences.CollectionModelType<ExchangeRate>() {});
-            if (exchangeRates == null || exchangeRates.getContent().size() != 1) {
-                throw new RemoteException(String.format("Exchange rate from %s to %s not found", fromCurrency, toCurrency));
-            }
-            Collection<ExchangeRate> rates = exchangeRates.getContent();
-            return rates.iterator().next();
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
+    public ExchangeRate getExchangeRate(String fromCurrency, String toCurrency) {
+        UriComponentsBuilder builder = UriComponentsBuilder.fromUriString(endpoint);
+        builder.queryParam("fromCurrency", fromCurrency);
+        builder.queryParam("toCurrency", toCurrency);
+        Traverson traverson = new Traverson(builder.build(0), MediaTypes.HAL_JSON);
+        CollectionModel<ExchangeRate> exchangeRates = traverson.follow()
+                .toObject(new TypeReferences.CollectionModelType<ExchangeRate>() {});
+        if (exchangeRates == null || exchangeRates.getContent().size() != 1) {
+            throw new RestClientException(String.format("Exchange rate from %s to %s not found", fromCurrency, toCurrency));
         }
+        Collection<ExchangeRate> rates = exchangeRates.getContent();
+        return rates.iterator().next();
     }
 }

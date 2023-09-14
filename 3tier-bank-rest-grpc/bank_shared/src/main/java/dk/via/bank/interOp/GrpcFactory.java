@@ -1,7 +1,7 @@
 package dk.via.bank.interOp;
 
 import dk.via.bank.dto.TransactionSpecification;
-import dk.via.bank.model.transaction.AbstractTransaction;
+import dk.via.bank.model.transaction.TransactionVisitor;
 
 import java.math.BigDecimal;
 import java.util.Collection;
@@ -59,7 +59,6 @@ public class GrpcFactory {
                 .setAcctNumber(toGrpc(account.getAccountNumber()))
                 .setAmount100(getIntValue(account.getBalance().getAmount(), 100))
                 .setCurrency(account.getSettledCurrency())
-                .setCustomerCpr(account.getCustomerCpr())
                 .build();
     }
 
@@ -92,21 +91,20 @@ public class GrpcFactory {
         long amount100 = t.getAmount100();
         String currency = t.getCurrency();
         dk.via.bank.model.Money money = createMoney(amount100, currency);
-        switch (t.getType()) {
-            case TransactionSpecification.DEPOSIT:
-                return new dk.via.bank.model.transaction.DepositTransaction(-1, money, account);
-            case TransactionSpecification.WITHDRAW:
-                return new dk.via.bank.model.transaction.WithdrawTransaction(-1, money, account);
-            case TransactionSpecification.TRANSFER:
-                return new dk.via.bank.model.transaction.TransferTransaction(-1, money, account, recipient);
-            default:
-                throw new IllegalArgumentException();
-        }
+        return switch (t.getType()) {
+            case TransactionSpecification.DEPOSIT ->
+                    new dk.via.bank.model.transaction.DepositTransaction(-1, money, account);
+            case TransactionSpecification.WITHDRAW ->
+                    new dk.via.bank.model.transaction.WithdrawTransaction(-1, money, account);
+            case TransactionSpecification.TRANSFER ->
+                    new dk.via.bank.model.transaction.TransferTransaction(-1, money, account, recipient);
+            default -> throw new IllegalArgumentException();
+        };
     }
 
-    public static dk.via.bank.grpc.Transaction toGrpc(dk.via.bank.model.transaction.AbstractTransaction t) {
+    public static dk.via.bank.grpc.Transaction toGrpc(dk.via.bank.model.transaction.Transaction t) {
         dk.via.bank.grpc.Transaction[] trans = new dk.via.bank.grpc.Transaction[1];
-        dk.via.bank.model.transaction.TransactionVisitor visitor = new dk.via.bank.model.transaction.TransactionVisitor() {
+        TransactionVisitor<RuntimeException> visitor = new TransactionVisitor<>() {
             @Override
             public void visit(dk.via.bank.model.transaction.DepositTransaction t) {
                 trans[0] = dk.via.bank.grpc.Transaction.newBuilder()
@@ -165,7 +163,7 @@ public class GrpcFactory {
                 .build();
     }
 
-    public static Collection<dk.via.bank.grpc.Transaction> toGrpcTransactions(Collection<dk.via.bank.model.transaction.AbstractTransaction> transactions) {
+    public static Collection<dk.via.bank.grpc.Transaction> toGrpcTransactions(Collection<dk.via.bank.model.transaction.Transaction> transactions) {
         return transactions.stream().map(GrpcFactory::toGrpc).collect(toList());
     }
 

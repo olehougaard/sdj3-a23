@@ -32,53 +32,33 @@ public class TransactionRestAdapter implements TransactionData {
     }
 
     @Override
-    public Transaction read(int transactionId, Account account) throws RemoteException {
-        try {
-            return restTemplate.getForObject(transactionURI(account) + "/" + transactionId, Transaction.class);
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public Transaction read(int transactionId, Account account) {
+        return restTemplate.getForObject(transactionURI(account) + "/" + transactionId, Transaction.class);
     }
 
     @Override
-    public List<Transaction> readAllFor(Account account) throws RemoteException {
-        try {
-            URI uri = UriComponentsBuilder.fromUriString(endpoint + "/" + account.getAccountNumber()).build(0);
-            Traverson traverson = new Traverson(uri, MediaTypes.HAL_JSON);
-            CollectionModel<TransactionSpecification> ts = traverson
-                    .follow("$._links.transactions.href")
-                    .toObject(new TypeReferences.CollectionModelType<TransactionSpecification>() {});
-            if (ts == null) throw new RemoteException("No response from " + transactionURI(account));
-            Collection<TransactionSpecification> transactions = ts.getContent();
-            return transactions.stream().map(s -> s.toTransaction(account)).toList();
-        } catch (Exception e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public List<Transaction> readAllFor(Account account) {
+        URI uri = UriComponentsBuilder.fromUriString(endpoint + "/" + account.getAccountNumber()).build(0);
+        Traverson traverson = new Traverson(uri, MediaTypes.HAL_JSON);
+        CollectionModel<TransactionSpecification> ts = traverson
+                .follow("$._links.transactions.href")
+                .toObject(new TypeReferences.CollectionModelType<TransactionSpecification>() {});
+        if (ts == null) throw new RuntimeException("No response from " + transactionURI(account));
+        Collection<TransactionSpecification> transactions = ts.getContent();
+        return transactions.stream().map(s -> s.toTransaction(account)).toList();
     }
 
     @Override
-    public Transaction create(Transaction transaction) throws RemoteException {
-        try {
-            TransactionSpecification spec = TransactionSpecification.from(transaction);
-            Account account1 = transaction.getAccount();
-            TransactionSpecification response = restTemplate.postForEntity(transactionURI(account1), spec, TransactionSpecification.class).getBody();
-            if (response == null) throw new RemoteException("No response from " + transactionURI(account1));
-            return response.toTransaction(account1);
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public Transaction create(Transaction transaction) {
+        TransactionSpecification spec = TransactionSpecification.from(transaction);
+        Account account1 = transaction.getAccount();
+        TransactionSpecification response = restTemplate.postForEntity(transactionURI(account1), spec, TransactionSpecification.class).getBody();
+        if (response == null) throw new RuntimeException("No response from " + transactionURI(account1));
+        return response.toTransaction(account1);
     }
 
     @Override
-    public void delete(int transactionId, Account account) throws RemoteException {
-        try {
-            restTemplate.delete(transactionURI(account) + "/" + transactionId);
-        } catch (RestClientException e) {
-            e.printStackTrace();
-            throw new RemoteException(e.getMessage());
-        }
+    public void delete(int transactionId, Account account) {
+        restTemplate.delete(transactionURI(account) + "/" + transactionId);
     }
 }

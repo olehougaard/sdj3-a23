@@ -12,11 +12,11 @@ public class BranchCustomerService {
         this.customerData = customerData;
     }
 
-    public Customer createCustomer(String cpr, String name, String address) throws RemoteException {
+    public Customer createCustomer(String cpr, String name, String address) {
         return customerData.create(cpr, name, address);
     }
 
-    public Customer getCustomer(String cpr) throws RemoteException {
+    public Customer getCustomer(String cpr) {
         return customerData.read(cpr);
     }
 }

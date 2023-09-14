@@ -13,7 +13,7 @@ public class BranchExchangeService {
         this.exchangeRateData = exchangeRateData;
     }
 
-    public Money exchange(Money amount, String targetCurrency) throws RemoteException {
+    public Money exchange(Money amount, String targetCurrency) {
         ExchangeRate exchangeRate = exchangeRateData.getExchangeRate(amount.getCurrency(), targetCurrency);
         return exchangeRate.exchange(amount);
     }

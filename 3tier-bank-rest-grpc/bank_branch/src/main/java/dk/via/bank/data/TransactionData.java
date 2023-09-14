@@ -8,8 +8,8 @@ import dk.via.bank.model.Account;
 import dk.via.bank.model.transaction.Transaction;
 
 public interface TransactionData extends Remote {
-	Transaction read(int transactionId, Account account) throws RemoteException;
-	List<Transaction> readAllFor(Account account) throws RemoteException;
-	Transaction create(Transaction transaction) throws RemoteException;
-	void delete(int transactionId, Account account) throws RemoteException;
+	Transaction read(int transactionId, Account account);
+	List<Transaction> readAllFor(Account account);
+	Transaction create(Transaction transaction);
+	void delete(int transactionId, Account account);
 }

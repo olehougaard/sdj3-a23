@@ -9,7 +9,7 @@ import dk.via.bank.data.TransactionData;
 import dk.via.bank.model.*;
 import dk.via.bank.model.transaction.*;
 
-public class BranchTransactionService implements TransactionVisitor<RemoteException> {
+public class BranchTransactionService implements TransactionVisitor<RuntimeException> {
 	private final AccountData accountData;
 	private final TransactionData transactionData;
 	private final ExchangeRateData exchangeRateData;
@@ -20,12 +20,12 @@ public class BranchTransactionService implements TransactionVisitor<RemoteExcept
 		this.exchangeRateData = exchangeData;
 	}
 
-	public void execute(Transaction t) throws RemoteException {
+	public void execute(Transaction t) {
 		t.accept(this);
 		transactionData.create(t);
 	}
 	
-	private Money translateToSettledCurrency(Money amount, Account account) throws RemoteException {
+	private Money translateToSettledCurrency(Money amount, Account account) {
 		if (!amount.getCurrency().equals(account.getSettledCurrency())) {
 			ExchangeRate rate = exchangeRateData.getExchangeRate(amount.getCurrency(), account.getSettledCurrency());
 			amount = rate.exchange(amount);
@@ -34,7 +34,7 @@ public class BranchTransactionService implements TransactionVisitor<RemoteExcept
 	}
 
 	@Override
-	public void visit(DepositTransaction transaction) throws RemoteException {
+	public void visit(DepositTransaction transaction) {
 		Account account = transaction.getAccount();
 		Money amount = transaction.getAmount();
 		amount = translateToSettledCurrency(amount, account);
@@ -43,7 +43,7 @@ public class BranchTransactionService implements TransactionVisitor<RemoteExcept
 	}
 	
 	@Override
-	public void visit(WithdrawTransaction transaction) throws RemoteException {
+	public void visit(WithdrawTransaction transaction) {
 		Account account = transaction.getAccount();
 		Money amount = transaction.getAmount();
 		amount = translateToSettledCurrency(amount, account);
@@ -51,17 +51,17 @@ public class BranchTransactionService implements TransactionVisitor<RemoteExcept
 			account.withdraw(amount);
 			accountData.update(account);
 		} else {
-			throw new RemoteException("Insufficient funds");
+			throw new IllegalStateException("Insufficient funds");
 		}
 	}
 	
 	@Override
-	public void visit(TransferTransaction transaction) throws RemoteException {
+	public void visit(TransferTransaction transaction) {
 		visit(transaction.getDepositTransaction());
 		visit(transaction.getWithdrawTransaction());
 	}
 
-	public List<Transaction> getTransactionsFor(Account primaryAccount) throws RemoteException {
+	public List<Transaction> getTransactionsFor(Account primaryAccount) {
 		return transactionData.readAllFor(primaryAccount);
 	}
 }

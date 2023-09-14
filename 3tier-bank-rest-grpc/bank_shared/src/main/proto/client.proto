@@ -19,10 +19,9 @@ message AccountNumber {
 }
 
 message Account {
-  AccountNumber acctNumber = 3;
-  int64 amount100 = 4;
+  AccountNumber acctNumber = 2;
+  int64 amount100 = 3;
   string currency = 1;
-  string customerCpr = 2;
 }
 
 message Accounts {
