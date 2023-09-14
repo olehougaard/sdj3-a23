@@ -34,10 +34,10 @@ public class TransactionController {
 	}
 
 	@GetMapping("/{id}")
-	public Transaction readTransaction(@PathVariable("accountNumber") String accountString, @PathVariable("id") int transactionId) throws SQLException {
+	public TransactionSpecification readTransaction(@PathVariable("accountNumber") String accountString, @PathVariable("id") int transactionId) throws SQLException {
 		Transaction read = transactionData.read(transactionId);
 		if (read == null || !read.includes(AccountNumber.fromString(accountString))) throw new NotFound();
-		return read;
+		return TransactionSpecification.from(read);
 	}
 
 	@GetMapping

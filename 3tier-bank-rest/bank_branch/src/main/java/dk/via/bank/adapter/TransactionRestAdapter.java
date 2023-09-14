@@ -27,7 +27,10 @@ public class TransactionRestAdapter implements TransactionData {
     @Override
     public Transaction read(int transactionId, Account account) throws RemoteException {
         try {
-            return restTemplate.getForObject(transactionURI(account) + "/" + transactionId, Transaction.class);
+            String url = transactionURI(account) + "/" + transactionId;
+            TransactionSpecification transaction = restTemplate.getForObject(url, TransactionSpecification.class);
+            if (transaction == null) throw new RemoteException("No response from " + url);
+            return transaction.toTransaction(account);
         } catch (RestClientException e) {
             throw new RemoteException(e.getMessage());
         }

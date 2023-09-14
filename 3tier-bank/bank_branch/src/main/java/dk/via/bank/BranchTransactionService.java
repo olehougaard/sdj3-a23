@@ -50,6 +50,8 @@ public class BranchTransactionService implements TransactionVisitor {
 		if (amount.getAmount().doubleValue() <= account.getBalance().getAmount().doubleValue()) {
 			account.withdraw(amount);
 			accountData.update(account);
+		} else {
+			throw new RemoteException("Insufficient funds");
 		}
 	}
 	
