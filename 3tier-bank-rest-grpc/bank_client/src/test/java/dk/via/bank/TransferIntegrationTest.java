@@ -1,24 +1,21 @@
 package dk.via.bank;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-
-import java.math.BigDecimal;
-import java.rmi.RemoteException;
-import java.rmi.registry.LocateRegistry;
-import java.rmi.registry.Registry;
-import java.util.List;
-
-import org.junit.After;
-import org.junit.Before;
-import org.junit.Test;
-
 import dk.via.bank.model.Account;
 import dk.via.bank.model.Customer;
 import dk.via.bank.model.Money;
 import dk.via.bank.model.transaction.DepositTransaction;
 import dk.via.bank.model.transaction.Transaction;
 import dk.via.bank.model.transaction.TransferTransaction;
+import org.junit.After;
+import org.junit.Before;
+import org.junit.Test;
+
+import java.math.BigDecimal;
+import java.rmi.RemoteException;
+import java.util.List;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class TransferIntegrationTest {
 	private Branch branch;
@@ -27,8 +24,7 @@ public class TransferIntegrationTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Registry registry = LocateRegistry.getRegistry("localhost", 8099);
-		branch = (Branch) registry.lookup("Branch 1");
+		branch = new BranchClient("localhost", 9090);
 		Customer customer = branch.getCustomer("1234567890");
 		primaryAccount = branch.createAccount(customer, "DKK");
 		assertNotNull(primaryAccount);

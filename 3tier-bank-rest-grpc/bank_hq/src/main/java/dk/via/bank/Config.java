@@ -16,7 +16,7 @@ import java.math.BigDecimal;
 @Configuration
 @ComponentScan
 public class Config {
-    public static final String JDBC_URL = "jdbc:postgresql://localhost:5432/postgres?currentSchema=bank";
+    public static final String JDBC_URL = "jdbc:postgresql://localhost:5433/postgres?currentSchema=bank";
     public static final String USERNAME = "postgres";
     public static final String PASSWORD = "password";
 

@@ -49,7 +49,6 @@ public class BranchServiceImpl extends BranchGrpc.BranchImplBase {
     public void createAccount(CreateAccountRequest request, StreamObserver<Account> responseObserver) {
         dk.via.bank.model.Customer customer = GrpcFactory.fromGrpc(request.getCustomer());
         dk.via.bank.model.Account account = accountService.createAccount(customer, request.getCurrency());
-        super.createAccount(request, responseObserver);
         responseObserver.onNext(GrpcFactory.toGrpc(account));
         responseObserver.onCompleted();
     }
