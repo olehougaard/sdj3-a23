@@ -12,6 +12,7 @@ import java.sql.SQLException;
 
 @RestController
 @RequestMapping("/customers")
+@CrossOrigin
 public class CustomerController {
 	private final CustomerDataService data;
 
