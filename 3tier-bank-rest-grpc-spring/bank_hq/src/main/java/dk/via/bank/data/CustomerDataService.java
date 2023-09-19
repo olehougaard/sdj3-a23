@@ -6,6 +6,7 @@ import java.util.Collection;
 
 import dk.via.bank.model.Account;
 import dk.via.bank.model.Customer;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -16,8 +17,11 @@ public class CustomerDataService  {
 	private final DatabaseHelper<Customer> helper;
 	private final AccountDataService accountDAO;
 	
-	public CustomerDataService(DatabaseHelper<Customer> helper, AccountDataService accountDAO) {
-		this.helper = helper;
+	public CustomerDataService(@Value("${jdbc.url}") String jdbcURL,
+							   @Value("${jdbc.username}") String username,
+							   @Value("${jdbc.password}") String password,
+							   AccountDataService accountDAO) {
+		this.helper = new DatabaseHelper<>(jdbcURL, username, password);
 		this.accountDAO = accountDAO;
 	}
 

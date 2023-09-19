@@ -4,6 +4,7 @@ import dk.via.bank.model.Account;
 import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Money;
 import dk.via.bank.model.transaction.*;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -21,9 +22,12 @@ public class TransactionDataService {
 	private final DatabaseHelper<Transaction> helper;
 	private final AccountDataService accounts;
 	
-	public TransactionDataService(AccountDataService accounts, DatabaseHelper<Transaction> helper) {
+	public TransactionDataService(@Value("${jdbc.url}") String jdbcURL,
+								  @Value("${jdbc.username}") String username,
+								  @Value("${jdbc.password}") String password,
+								  AccountDataService accounts) {
 		this.accounts = accounts;
-		this.helper = helper;
+		this.helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 
 	private Account readAccount(ResultSet rs, String regNumberAttr, String acctNumberAttr) throws SQLException {
