@@ -5,6 +5,7 @@ import dk.via.bank.dto.TransactionSpecification;
 import dk.via.bank.model.Account;
 import dk.via.bank.model.transaction.Transaction;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
@@ -25,8 +26,8 @@ public class TransactionRestAdapter implements TransactionData {
     private final String endpoint;
     private final RestTemplate restTemplate;
 
-    public TransactionRestAdapter() {
-        this.endpoint = "http://localhost:8080/" + "accounts";
+    public TransactionRestAdapter(@Value("${hq.endpoint}") String endpoint) {
+        this.endpoint = endpoint + "accounts";
         this.restTemplate = new RestTemplate();
     }
 

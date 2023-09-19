@@ -1,7 +1,6 @@
 package dk.via.bank;
 
 import org.springframework.boot.autoconfigure.ImportAutoConfiguration;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
@@ -22,10 +21,4 @@ import org.springframework.context.annotation.Configuration;
         net.devh.boot.grpc.server.autoconfigure.GrpcServerSecurityAutoConfiguration.class,
         net.devh.boot.grpc.server.autoconfigure.GrpcServerTraceAutoConfiguration.class
 })
-
-public class Config {
-    @Bean(name="regNumber")
-    public Integer regNumber() {
-        return 4711;
-    }
-}
+public class Config {}

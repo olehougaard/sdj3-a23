@@ -6,7 +6,9 @@ import dk.via.bank.model.Account;
 import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Customer;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
@@ -22,8 +24,9 @@ public class AccountRestAdapter implements AccountData {
     private final String endpoint;
     private final RestTemplate restTemplate;
 
-    public AccountRestAdapter() {
-        this.endpoint = "http://localhost:8080/" + "accounts";
+    @Autowired
+    public AccountRestAdapter(@Value("${hq.endpoint}") String endpoint) {
+        this.endpoint = endpoint + "accounts";
         this.restTemplate = new RestTemplate();
     }
 

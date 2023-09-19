@@ -3,6 +3,7 @@ package dk.via.bank.adapter;
 import dk.via.bank.data.CustomerData;
 import dk.via.bank.model.Customer;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.RestTemplate;
@@ -15,8 +16,8 @@ public class CustomerRestAdapter implements CustomerData {
     private final String endpoint;
     private final RestTemplate restTemplate;
 
-    public CustomerRestAdapter() {
-        this.endpoint = "http://localhost:8080/" + "customers";
+    public CustomerRestAdapter(@Value("${hq.endpoint}") String endpoint) {
+        this.endpoint = endpoint + "customers";
         this.restTemplate = new RestTemplate();
     }
 

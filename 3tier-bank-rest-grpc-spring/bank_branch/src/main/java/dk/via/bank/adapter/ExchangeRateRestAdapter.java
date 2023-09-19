@@ -3,6 +3,7 @@ package dk.via.bank.adapter;
 import dk.via.bank.data.ExchangeRateData;
 import dk.via.bank.model.ExchangeRate;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.MediaTypes;
 import org.springframework.hateoas.client.Traverson;
@@ -21,8 +22,8 @@ import java.util.Objects;
 public class ExchangeRateRestAdapter implements ExchangeRateData {
     private final String endpoint;
 
-    public ExchangeRateRestAdapter() {
-        this.endpoint = "http://localhost:8080/" + "exchange_rate";
+    public ExchangeRateRestAdapter(@Value("${hq.endpoint}") String endpoint) {
+        this.endpoint = endpoint + "exchange_rate";
     }
 
     @Override

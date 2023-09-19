@@ -3,6 +3,7 @@ package dk.via.bank.service;
 import dk.via.bank.data.*;
 import dk.via.bank.model.*;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.rmi.RemoteException;
@@ -13,7 +14,7 @@ public class BranchAccountService  {
 	private final int regNumber;
 	private final AccountData accountData;
 
-	public BranchAccountService(AccountData accountData, @Qualifier("regNumber") Integer regNumber) {
+	public BranchAccountService(AccountData accountData, @Value("${branch.regNumber}") Integer regNumber) {
 		this.regNumber = regNumber;
 		this.accountData = accountData;
 	}
