@@ -1,0 +1,75 @@
+syntax = "proto3";
+option java_multiple_files = true;
+
+package dk.via.bank.grpc;
+
+message Customer {
+  string cpr = 1;
+  string name = 2;
+  string address = 3;
+}
+
+message CustomerRequest {
+  string cpr = 1;
+}
+
+message AccountNumber {
+  int32 regNumber = 1;
+  int64 acctNumber = 2;
+}
+
+message Account {
+  AccountNumber acctNumber = 2;
+  int64 amount100 = 3;
+  string currency = 1;
+}
+
+message Accounts {
+  repeated Account account = 1;
+}
+
+message Transaction {
+  int32  id=1;
+  string type=3;
+  int64  amount100=2;
+  string currency=4;
+  string text=5;
+  Account account=6;
+  Account recipient=7;
+}
+
+message Transactions {
+  repeated Transaction transactions = 1;
+}
+
+message Confirmation {
+  string message = 1;
+}
+
+message CreateAccountRequest {
+  Customer customer = 2;
+  string currency = 1;
+}
+
+message ExchangeRequest {
+  int64 amount10000 = 1;
+  string fromCurrency = 2;
+  string toCurrency = 3;
+}
+
+message ExchangeResponse {
+  int64 amount100 = 1;
+  string currency = 2;
+}
+
+service Branch {
+  rpc createCustomer(Customer) returns (Customer);
+  rpc getCustomer(CustomerRequest) returns (Customer);
+  rpc createAccount(CreateAccountRequest) returns (Account);
+  rpc getAccount(AccountNumber) returns (Account);
+  rpc cancelAccount(Account) returns (Confirmation);
+  rpc getAccounts(Customer) returns (Accounts);
+  rpc execute(Transaction) returns (Confirmation);
+  rpc exchange(ExchangeRequest) returns (ExchangeResponse);
+  rpc getTransactionsFor(Account) returns (Transactions);
+}
