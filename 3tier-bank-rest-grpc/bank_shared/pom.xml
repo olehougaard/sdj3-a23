@@ -15,17 +15,17 @@
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-netty</artifactId>
-            <version>1.49.2</version>
+            <version>1.51.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-protobuf</artifactId>
-            <version>1.49.2</version>
+            <version>1.51.0</version>
         </dependency>
         <dependency>
             <groupId>io.grpc</groupId>
             <artifactId>grpc-stub</artifactId>
-            <version>1.49.2</version>
+            <version>1.51.0</version>
         </dependency>
         <dependency>
             <groupId>javax.annotation</groupId>
