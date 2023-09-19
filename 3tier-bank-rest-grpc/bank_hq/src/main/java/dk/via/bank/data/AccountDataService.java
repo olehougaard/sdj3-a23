@@ -9,6 +9,7 @@ import java.util.List;
 import dk.via.bank.model.Account;
 import dk.via.bank.model.AccountNumber;
 import dk.via.bank.model.Money;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -17,8 +18,10 @@ import org.springframework.stereotype.Component;
 public class AccountDataService {
 	private final DatabaseHelper<Account> helper;
 	
-	public AccountDataService(DatabaseHelper<Account> helper) {
-		this.helper = helper;
+	public AccountDataService(@Value("${jdbc.url}") String jdbcURL,
+							  @Value("${jdbc.username}") String username,
+							  @Value("${jdbc.password}") String password) {
+		this.helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 
 	public Account create(int regNumber, String customerCpr, String currency) throws SQLException {

@@ -2,6 +2,7 @@ package dk.via.bank.data;
 
 import dk.via.bank.model.ExchangeRate;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Scope;
 import org.springframework.stereotype.Component;
 
@@ -14,8 +15,10 @@ import java.util.List;
 public class ExchangeRateDataService {
 	private final DatabaseHelper<ExchangeRate> helper;
 
-	public ExchangeRateDataService(@Autowired DatabaseHelper<ExchangeRate> helper) {
-		this.helper = helper;
+	public ExchangeRateDataService(@Value("${jdbc.url}") String jdbcURL,
+								   @Value("${jdbc.username}") String username,
+								   @Value("${jdbc.password}") String password) {
+		this.helper = new DatabaseHelper<>(jdbcURL, username, password);
 	}
 
 	private static ExchangeRate map(ResultSet rs) throws SQLException {
