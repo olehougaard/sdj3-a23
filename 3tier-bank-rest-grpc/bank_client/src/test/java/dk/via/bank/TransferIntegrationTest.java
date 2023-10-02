@@ -18,7 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 
 public class TransferIntegrationTest {
-	private Branch branch;
+	private BranchClient branch;
 	private Account primaryAccount;
 	private Account secondaryAccount;
 
