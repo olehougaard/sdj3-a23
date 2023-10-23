@@ -1,0 +1,12 @@
+<html>
+    <head>
+        <script>
+            function f() {
+                fetch("http://localhost:8080/accounts/4711000017/transactions/10")
+                .then(r => r.body())
+                .then(console.log)
+            }
+        </script>
+    </head>
+    <body onload=""f()></body>
+</html>
